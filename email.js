@@ -1,8 +1,6 @@
 const nodemailer = require("nodemailer");
-const ejs = require("ejs");
-const fs = require("fs");
 
-module.exports.sendEmail = async (address, subject, payload, template) => {
+module.exports.sendEmail = async (address, subject, content) => {
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
@@ -13,14 +11,12 @@ module.exports.sendEmail = async (address, subject, payload, template) => {
       },
     });
 
-    const source = fs.readFileSync(template, "utf8");
-    const compiledTemplate = ejs.compile(source);
     const options = () => {
       return {
         from: process.env.EMAIL_ADDRESS,
         to: address,
         subject: subject,
-        text: compiledTemplate(payload)
+        text: content
       };
     };
 

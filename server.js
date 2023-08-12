@@ -6,6 +6,8 @@ const express = require('express');
 const app = express();
 const path = require("path");
 const os = require("os");
+const ejs = require("ejs");
+const fs = require("fs");
 
 const {sendEmail} = require("./email");
 
@@ -35,16 +37,25 @@ app.post('/contact', function (req, res) {
   const date = new Date().toLocaleDateString();
   const time = new Date().toLocaleTimeString();
   const hostname = os.hostname();
+
   const payload = {name, email, message, date, time};
   const template = path.join(__dirname, "templates/notification.ejs");
+  const source = fs.readFileSync(template, "utf8");
+  const compiledTemplate = ejs.compile(source);
+  const content = compiledTemplate(payload);
+
+  fs.appendFile('logs/messages.txt', `${date}:${time}:${name},${email},${message}\n`, function (err) {
+    if (err) console.err(err);
+    else console.log('Saved message to file');
+  });
 
   // Send message to personal email
   sendEmail("aarya.bhatia1678@gmail.com",
-    subject = `${hostname}: You received a message from ${name}`, payload, template)
+    subject = `${hostname}: You received a message from ${name}`, content)
 
   // Send email confirmation to receiver
   sendEmail(email,
-    subject = `${hostname}: Your message has been sent!`, payload, template)
+    subject = `${hostname}: Your message has been sent!`, content)
 
   // TODO: Append message to file
 

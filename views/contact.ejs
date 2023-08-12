@@ -1,0 +1,37 @@
+<%- include( 'header') %>
+<h1 class="p-2 text-center">Contact Me</h1>
+<hr />
+<div id="main" class="container my-4">
+  <% if(typeof status != 'undefined') { %>
+    <% if(status == "FAILURE") { %>
+    <div class="alert alert-danger"><%= message %></div>
+    <% } else if(status == "SUCCESS") { %>
+    <div class="alert alert-success"><%= message %></div>
+    <% } %>
+  <% } %>
+
+  <form action="/contact" method="post">
+    <div class="form-group mb-4">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input required type="text" class="text-white bg-dark form-control" name="name" id="name" placeholder="Name" />
+      </div>
+    </div>
+    <div class="form-group mb-4">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input required type="email" class="text-white bg-dark form-control" name="email" id="email" placeholder="Email" />
+      </div>
+    </div>
+    <div class="form-group mb-4">
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea required class="text-white bg-dark form-control" name="message" id="message"></textarea>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+  </form>
+</div>
+
+<hr />
+<%- include('footer') %>
